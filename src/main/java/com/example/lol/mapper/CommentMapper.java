@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface CommentMapper {
-	public Map<String, Object> getComment(Map<String, Object> params);
+	
+	public Map<String, Object> getUser(Map<String, Object> params);
 	
 }
