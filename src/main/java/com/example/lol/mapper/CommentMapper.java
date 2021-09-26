@@ -8,5 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CommentMapper {
 	
 	public Map<String, Object> getUser(Map<String, Object> params);
-	
+
 }

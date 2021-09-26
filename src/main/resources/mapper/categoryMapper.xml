@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lol.mapper.CategoryMapper">
+	<insert id="insertCategory" parameterType="com.example.lol.model.Category" useGeneratedKeys="true" keyProperty="categoryId">
+		INSERT INTO 
+			CMT_CATEGORY(
+				categoryNm
+				,createId
+				,createDate
+				,modifyId
+				,modifyDate
+		)VALUES (
+				#{categoryNm}
+				,#{createId}
+				,NOW()
+				,#{modifyId}
+				,NOW()
+		)
+	</insert>
+	
+	<update id="updateCategory" parameterType="com.example.lol.model.Category">
+		UPDATE CMT_CATEGORY SET
+			categoryNm = #{categoryNm}
+				,modifyId = #{modifyId}
+				,modifyDate = NOW()
+		WHERE categoryId = #{categoryId}
+	</update>
+	
+	<delete id="deleteCategory" parameterType="com.example.lol.model.Category">
+		DELETE FROM CMT_CATEGORY
+		WHERE categoryId = #{categoryId}
+	</delete>
+	
+	<select id="selectCategory" resultType="java.util.Map">
+		SELECT categoryId
+			,categoryNm
+			,createId
+			,createDate
+			,modifyId
+			,modifyDate
+		FROM CMT_CATEGORY
+	</select>
+	
+	<select id="selectCategoryDetail" parameterType="com.example.lol.model.Category" resultType="java.util.Map">
+		SELECT categoryId
+			,categoryNm
+			,createId
+			,createDate
+			,modifyId
+			,modifyDate
+		FROM CMT_CATEGORY
+		WHERE categoryId = #{categoryId} 
+	</select>
+</mapper>
