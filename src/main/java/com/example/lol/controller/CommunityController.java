@@ -27,11 +27,7 @@ public class CommunityController {
 	@PostMapping("/{categoryId}")
 	public Community createCommunityController(@PathVariable("categoryId") long categoryId , @RequestBody Community community) {
 		
-		community = Community.builder()
-				.categoryId(categoryId)
-				.communityNm(community.getCommunityNm())
-				.createId(community.getCreateId())
-				.build();
+		community.setCategoryId(categoryId);
 		
 		return communityService.createCommunity(community);
 	}
@@ -41,12 +37,8 @@ public class CommunityController {
 												,@PathVariable("communityId") long communityId	
 												, @RequestBody Community community) {
 			
-		community = Community.builder()
-				.communityId(communityId)
-				.categoryId(categoryId)
-				.communityNm(community.getCommunityNm())
-				.modifyId(community.getModifyId())
-				.build();
+		community.setCommunityId(communityId);
+		community.setCategoryId(categoryId);
 		
 		return communityService.modifyCommunity(community);
 	}

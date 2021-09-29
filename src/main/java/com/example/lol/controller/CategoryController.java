@@ -32,11 +32,7 @@ public class CategoryController {
 	@PutMapping("/{categoryId}")
 	public Category modiyCategoryController(@PathVariable("categoryId") long categoryId , @RequestBody Category category) {
 		
-		category = Category.builder()
-				.categoryId(categoryId)
-				.categoryNm(category.getCategoryNm())
-				.modifyId(category.getModifyId())
-				.build();
+		category.setCategoryId(categoryId);
 		
 		return categoryService.modifyCategory(category);
 	}

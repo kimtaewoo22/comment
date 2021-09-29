@@ -7,13 +7,9 @@
 				categoryNm
 				,createId
 				,createDate
-				,modifyId
-				,modifyDate
 		)VALUES (
 				#{categoryNm}
 				,#{createId}
-				,NOW()
-				,#{modifyId}
 				,NOW()
 		)
 	</insert>
