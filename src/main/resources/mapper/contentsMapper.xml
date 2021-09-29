@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lol.mapper.ContentsMapper">
+	<insert id="insertContents" parameterType="com.example.lol.model.Contents" useGeneratedKeys="true" keyProperty="contentsId">
+		INSERT INTO cmt_contents (
+			contentsNm
+			,communityId
+			,contents
+			,createId
+			,createDate
+		) VALUES (
+			#{contentsNm}
+			,#{communityId}
+			,#{contents}
+			,#{createId}
+			,now()
+		)			
+	</insert>
+	
+	<update id="updateContents" parameterType="com.example.lol.model.Contents">
+		UPDATE cmt_contents SET 
+			contentsNm = #{contentsNm}
+			,communityId = #{communityId}
+			,contents = #{contents}
+			,modifyId = #{modifyId}
+			,modifyDate = now()
+		WHERE contentsId = #{contentsId}
+	</update>
+	
+	<delete id="deleteContents" parameterType="com.example.lol.model.Contents">
+		DELETE FROM cmt_contents
+		WHERE contentsId = #{contentsId}
+	</delete>
+	
+	<select id="selectContents" parameterType="com.example.lol.model.Contents" resultType="java.util.Map">
+		SELECT contentsId
+			,contentsNm
+			,contents
+			,communityId
+			,createId
+			,createDate
+			,modifyId
+			,modifyDate
+		FROM cmt_contents
+		WHERE communityId = #{communityId}
+	</select>
+	
+	<select id="selectContentsDetail" parameterType="com.example.lol.model.Contents" resultType="java.util.Map">
+		SELECT contentsId
+			,contentsNm
+			,contents
+			,communityId
+			,createId
+			,createDate
+			,modifyId
+			,modifyDate
+		FROM cmt_contents
+		WHERE communityId = #{communityId}
+		AND contentsId = #{contentsId}
+	</select>
+</mapper>
