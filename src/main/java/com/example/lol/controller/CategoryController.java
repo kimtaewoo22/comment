@@ -26,39 +26,32 @@ public class CategoryController {
 	
 	@PostMapping("")
 	public Category createCategoryController(@RequestBody Category category) {
+		
 		return categoryService.createCategory(category);
 	}
 	
 	@PutMapping("/{categoryId}")
-	public Category modiyCategoryController(@PathVariable("categoryId") long categoryId , @RequestBody Category category) {
+	public Category modiyCategoryController(@PathVariable("categoryId") long categoryId 
+										, @RequestBody Category category) {
 		
-		category.setCategoryId(categoryId);
-		
-		return categoryService.modifyCategory(category);
+		return categoryService.modifyCategory(categoryId,category);
 	}
 	
 	@DeleteMapping("/{categoryId}")
 	public Category deleteCategoryController(@PathVariable("categoryId") long categoryId) {
 		
-		Category category = Category.builder()
-				.categoryId(categoryId)
-				.build();
-		
-		return categoryService.deleteCategory(category);
+		return categoryService.deleteCategory(categoryId);
 	}
 	
 	@GetMapping("")
 	public List<Map<String, Object>> getCategoryListController(){
+		
 		return categoryService.getCategoryList();
 	}
 	
 	@GetMapping("/{categoryId}")
 	public Map<String, Object> getCategoryDetailController(@PathVariable("categoryId") long categoryId){
 		
-		Category category = Category.builder()
-				.categoryId(categoryId)
-				.build();
-		
-		return categoryService.getCategoryDetail(category);
+		return categoryService.getCategoryDetail(categoryId);
 	}
 }

@@ -22,14 +22,18 @@ public class CategoryService {
 		return category;
 	}
 	
-	public Category modifyCategory(Category category) {
+	public Category modifyCategory(Long categoryId, Category category) {
+		category.setCategoryId(categoryId);
 		
 		categoryMapper.updateCategory(category);
 		
 		return category;
 	}
 	
-	public Category deleteCategory(Category category) {
+	public Category deleteCategory(Long categoryId) {
+		Category category = Category.builder()
+				.categoryId(categoryId)
+				.build();
 		
 		categoryMapper.deleteCategory(category);
 		
@@ -40,7 +44,11 @@ public class CategoryService {
 		return categoryMapper.selectCategory();
 	}
 	
-	public Map<String, Object> getCategoryDetail(Category category){
+	public Map<String, Object> getCategoryDetail(Long categoryId){
+		Category category = Category.builder()
+				.categoryId(categoryId)
+				.build();
+		
 		return categoryMapper.selectCategoryDetail(category);
 	}
 }

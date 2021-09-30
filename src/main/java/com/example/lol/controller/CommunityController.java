@@ -25,11 +25,10 @@ public class CommunityController {
 	CommunityService communityService;
 	
 	@PostMapping("/{categoryId}")
-	public Community createCommunityController(@PathVariable("categoryId") long categoryId , @RequestBody Community community) {
+	public Community createCommunityController(@PathVariable("categoryId") long categoryId 
+										, @RequestBody Community community) {
 		
-		community.setCategoryId(categoryId);
-		
-		return communityService.createCommunity(community);
+		return communityService.createCommunity(categoryId ,community);
 	}
 	
 	@PutMapping("/{categoryId}/{communityId}")
@@ -37,42 +36,26 @@ public class CommunityController {
 												,@PathVariable("communityId") long communityId	
 												, @RequestBody Community community) {
 			
-		community.setCommunityId(communityId);
-		community.setCategoryId(categoryId);
-		
-		return communityService.modifyCommunity(community);
+		return communityService.modifyCommunity(communityId,categoryId,community);
 	}
 	
 	@DeleteMapping("/{categoryId}/{communityId}")
 	public Community deleteCommunityController(@PathVariable("communityId") long communityId
 											,@PathVariable("categoryId") long categoryId) {
 		
-		Community community = Community.builder()
-				.communityId(communityId)
-				.categoryId(categoryId)
-				.build();
-		
-		return communityService.deleteCommunity(community);
+		return communityService.deleteCommunity(communityId,categoryId);
 	}
 	
 	@GetMapping("/{categoryId}")
 	public List<Map<String, Object>> getCommunity(@PathVariable("categoryId") long categoryId){
 		
-		Community community = Community.builder()
-				.categoryId(categoryId)
-				.build();
-		
-		return communityService.getCommunity(community);
+		return communityService.getCommunity(categoryId);
 	}
 	
 	@GetMapping("/{categoryId}/{communityId}")
 	public Map<String, Object> getCommunityDetail(@PathVariable("categoryId") long categoryId
 													,@PathVariable("communityId") long communityId){
-		Community community = Community.builder()
-				.communityId(communityId)
-				.categoryId(categoryId)
-				.build();
 		
-		return communityService.getCommunityDetail(community);
+		return communityService.getCommunityDetail(communityId,categoryId);
 	}
 }

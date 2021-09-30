@@ -15,32 +15,51 @@ public class ContentsService {
 	@Autowired
 	ContentsMapper contentsMapper;
 	
-	public Contents createContents(Contents contents) {
+	public Contents createContents(Long communityId, Contents contents) {
 		
+		contents.setCommunityId(communityId);
 		contentsMapper.insertContents(contents);
 		
 		return contents;
 	}
 	
-	public Contents modifyContents(Contents contents) {
+	public Contents modifyContents(Long contentsId,Long communityId,Contents contents) {
 		
+		contents.setContentsId(contentsId);
+		contents.setCommunityId(communityId);
 		contentsMapper.updateContents(contents);
 		
 		return contents;
 	}
 	
-	public Contents deleteContents(Contents contents) {
+	public Contents deleteContents(Long contentsId,Long communityId) {
+		
+		Contents contents = Contents.builder()
+				.contentsId(contentsId)
+				.communityId(communityId)
+				.build();
 		
 		contentsMapper.deleteContents(contents);
 		
 		return contents;
 	}
 	
-	public List<Map<String, Object>> getContentsList(Contents contents){
+	public List<Map<String, Object>> getContentsList(Long communityId){
+
+		Contents contents = Contents.builder()
+				.communityId(communityId)
+				.build();
+		
 		return contentsMapper.selectContents(contents);
 	}
 	
-	public Map<String, Object> getContentsDetail(Contents contents){
+	public Map<String, Object> getContentsDetail(Long contentsId,Long communityId){
+		
+		Contents contents = Contents.builder()
+				.contentsId(contentsId)
+				.communityId(communityId)
+				.build();
+		
 		return contentsMapper.selectContentsDetail(contents);
 	}
 }

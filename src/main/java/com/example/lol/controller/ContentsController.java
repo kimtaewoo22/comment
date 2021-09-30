@@ -28,9 +28,7 @@ public class ContentsController {
 	public Contents createContentsController(@PathVariable("communityId") long communityId
 											,@RequestBody Contents contents) {
 		
-		contents.setCommunityId(communityId);
-		
-		return contentsService.createContents(contents);
+		return contentsService.createContents(communityId,contents);
 	}
 	
 	@PutMapping("/{communityId}/{contentsId}")
@@ -38,42 +36,26 @@ public class ContentsController {
 											,@PathVariable("communityId") long communityId
 											,@RequestBody Contents contents) {
 		
-		contents.setContentsId(contentsId);
-		contents.setCommunityId(communityId);
-		
-		return contentsService.modifyContents(contents);
+		return contentsService.modifyContents(contentsId,communityId,contents);
 	}
 	
 	@DeleteMapping("/{communityId}/{contentsId}")
 	public Contents deleteContentsController(@PathVariable("contentsId") long contentsId
 											,@PathVariable("communityId") long communityId) {
 		
-		Contents contents = Contents.builder()
-				.contentsId(contentsId)
-				.communityId(communityId)
-				.build();
-				
-		return contentsService.deleteContents(contents);
+		return contentsService.deleteContents(contentsId,communityId);
 	}
 	
 	@GetMapping("/{communityId}")
 	public List<Map<String, Object>> getContentsController(@PathVariable("communityId") long communityId){
 		
-		Contents contents = Contents.builder()
-				.communityId(communityId)
-				.build();
-		
-		return contentsService.getContentsList(contents);
+		return contentsService.getContentsList(communityId);
 	}
 	
 	@GetMapping("/{communityId}/{contentsId}")
 	public Map<String, Object> getContentsDetailController(@PathVariable("communityId") long communityId
 														,@PathVariable("contentsId") long contentsId){
-		Contents contents = Contents.builder()
-				.contentsId(contentsId)
-				.communityId(communityId)
-				.build();
 		
-		return contentsService.getContentsDetail(contents);
+		return contentsService.getContentsDetail(contentsId,communityId);
 	}
 }

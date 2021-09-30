@@ -15,26 +15,51 @@ public class CommunityService {
 	@Autowired
 	CommunityMapper communityMapper;
 	
-	public Community createCommunity(Community community) {
-			communityMapper.insertCommunity(community);
+	public Community createCommunity(Long categoryId,Community community) {
+		
+		community.setCategoryId(categoryId);
+		communityMapper.insertCommunity(community);
+			
 		return community;
 	}
 	
-	public Community modifyCommunity(Community community) {
-			communityMapper.updateCommunity(community);
+	public Community modifyCommunity(Long communityId,Long categoryId,Community community) {
+		
+		community.setCommunityId(communityId);
+		community.setCategoryId(categoryId);
+		communityMapper.updateCommunity(community);
+		
 		return community;
 	}
 	
-	public Community deleteCommunity(Community community) {
-			communityMapper.deleteCommunity(community);
+	public Community deleteCommunity(Long communityId,Long categoryId) {
+		
+		Community community = Community.builder()
+				.communityId(communityId)
+				.categoryId(categoryId)
+				.build();
+		
+		communityMapper.deleteCommunity(community);
+		
 		return community;
 	}
 	
-	public List<Map<String, Object>> getCommunity(Community community){
+	public List<Map<String, Object>> getCommunity(Long categoryId){
+		
+		Community community = Community.builder()
+				.categoryId(categoryId)
+				.build();
+		
 		return communityMapper.selectCommunity(community);
 	}
 	
-	public Map<String, Object> getCommunityDetail(Community community){
+	public Map<String, Object> getCommunityDetail(Long communityId,Long categoryId){
+		
+		Community community = Community.builder()
+				.communityId(communityId)
+				.categoryId(categoryId)
+				.build();	
+		
 		return communityMapper.selectCommunityDetail(community);
 	}
 }
