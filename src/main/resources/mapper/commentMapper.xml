@@ -1,8 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.lol.mapper.CommentMapper">
-	<select id="getUser" parameterType="Map" resultType="Map">
-		SELECT *
-		FROM CMT_USER		
+	<insert id="insertComment" parameterType="com.example.lol.model.Comment" useGeneratedKeys="true" keyProperty="commentId">
+		INSERT INTO cmt_comment (
+			contentsId
+			,userId
+			,contents
+			,likeCnt
+			,isDelete
+			,reportCnt
+			,createDate
+		) VALUES (
+			#{contentsId}
+			,#{userId}
+			,#{contents}
+			,0
+			,0
+			,0
+			,now()
+		)
+	</insert>
+	<update id="updateComment" parameterType="com.example.lol.model.Comment">
+		UPDATE cmt_comment
+		SET	contents = #{contents}
+		,modifyDate = now()
+		WHERE commentId = #{commentId}	
+	</update>
+	
+	<delete id="deleteComment" parameterType="com.example.lol.model.Comment">
+		DELETE FROM cmt_comment
+		WHERE commentId = #{commentId}
+	</delete>
+	
+	<select id="selectComment" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+		SELECT commentId
+			,contentsId
+			,userId
+			,contents
+			,likeCnt
+			,isDelete
+			,reportCnt
+			,createDate
+			,modifyDate
+		FROM cmt_comment
+		WHERE contentsId = #{contentsId}
+		AND isDelete = 0
+	</select>
+	
+	<insert id="insertLike" parameterType="com.example.lol.model.Like" useGeneratedKeys="true" keyProperty="likeId">
+		INSERT INTO cmt_like(
+			commentId
+			,userId
+			,createDate
+		)VALUES(
+			#{commentId}
+			,#{userId}
+			,now()
+		)
+	</insert>
+	
+	<update id="updateLike" parameterType="com.example.lol.model.Comment">
+		UPDATE  cmt_comment
+		SET likeCnt = #{likeCnt}
+		WHERE commentId = #{commentId}
+	</update>
+	
+	<select id="isLike" parameterType="com.example.lol.model.Like" resultType="java.lang.Boolean">
+		SELECT 	count(1)
+		FROM cmt_like
+		WHERE commentId = #{commentId}
+		AND userId = #{userId}
+	</select>
+	
+	<select id="selectCommentDetail" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+		SELECT commentId
+			,contentsId
+			,userId
+			,contents
+			,likeCnt
+			,isDelete
+			,reportCnt
+			,createDate
+			,modifyDate
+		FROM cmt_comment
+		WHERE contentsId = #{contentsId}
+		AND commentId = #{commentId}
+	</select>
+	
+	<delete id="deleteLike" parameterType="com.example.lol.model.Like">
+		DELETE FROM cmt_like
+		WHERE commentId = #{commentId}
+		AND userId = #{userId}
+	</delete>
+	
+	<update id="updateReport" parameterType="com.example.lol.model.Comment">
+		UPDATE  cmt_comment
+		SET reportCnt = #{reportCnt}
+		WHERE commentId = #{commentId}
+	</update>
+	
+	<insert id="insertReport" parameterType="com.example.lol.model.Report" useGeneratedKeys="true" keyProperty="reportId">
+		INSERT INTO cmt_report(
+			commentId
+			,replyId
+			,userId
+			,reason
+			,createDate
+		)VALUES(
+			#{commentId}
+			,#{replyId}
+			,#{userId}
+			,#{reason}
+			,now()
+		)
+	</insert>
+	
+	<select id="isReport" parameterType="com.example.lol.model.Report" resultType="java.lang.Boolean">
+		SELECT 	count(1)
+		FROM cmt_report
+		WHERE userId = #{userId}
+		<if test="commentId != null and commentId != ''">
+			AND commentId = #{commentId}
+		</if>
+		<if test="replyId != null and replyId != ''">
+			AND replyId = #{replyId}
+		</if>
 	</select>
 </mapper>
