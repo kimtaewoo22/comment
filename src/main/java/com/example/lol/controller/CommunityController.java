@@ -41,7 +41,7 @@ public class CommunityController {
 	
 	@DeleteMapping("/{categoryId}/{communityId}")
 	public Community deleteCommunityController(@PathVariable("communityId") long communityId
-											,@PathVariable("categoryId") long categoryId) {
+										 		,@PathVariable("categoryId") long categoryId) {
 		
 		return communityService.deleteCommunity(communityId,categoryId);
 	}
