@@ -57,7 +57,7 @@ public class CommentController {
 									, @PathVariable("commentId") long commentId
 									, @RequestBody Map<String, Long> paramMap) {
 		
-		return commentService.insertLike(contentsId,commentId,paramMap);
+		return commentService.createLike(contentsId,commentId,paramMap);
 	}
 	
 	@PostMapping("/{contentsId}/{commentId}/report")
@@ -65,6 +65,6 @@ public class CommentController {
 			, @PathVariable("commentId") long commentId
 			, @RequestBody Map<String, Object> paramMap) {
 
-		return commentService.insertReport(contentsId,commentId,paramMap);
+		return commentService.createReport(contentsId,commentId,paramMap);
 	}
 }

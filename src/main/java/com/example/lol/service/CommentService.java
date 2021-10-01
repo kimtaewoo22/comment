@@ -57,7 +57,7 @@ public class CommentService {
 		return commentMapper.selectComment(comment);
 	}
 	
-	public Comment insertLike(long contentsId, long commentId, Map<String, Long> paramMap) {
+	public Comment createLike(long contentsId, long commentId, Map<String, Long> paramMap) {
 		
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
@@ -91,7 +91,7 @@ public class CommentService {
 		return (Long) resultMap.get("likeCnt");
 	}
 	
-	public Comment insertReport(long contentsId, long commentId, Map<String, Object> paramMap) {
+	public Comment createReport(long contentsId, long commentId, Map<String, Object> paramMap) {
 
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
