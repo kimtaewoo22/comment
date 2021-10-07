@@ -1,66 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.lol.mapper.CommentReplyMapper">
-	<insert id="insertCommentReply" parameterType="com.example.lol.model.CommentReply" useGeneratedKeys="true" keyProperty="replyId">
-		INSERT INTO cmt_comment_reply(
-			contents
+	<insert id="insertCommentReply" parameterType="com.example.lol.model.Comment" useGeneratedKeys="true" keyProperty="commentId">
+		INSERT INTO cmt_comment(
+			contentsId
+			,contents
 			,userId
-			,commentId
+			,parentsId
 			,isDelete
 			,reportCnt
 			,createDate
+			,depth
 		)VALUES(
-			#{contents}
+			#{contentsId}
+			,#{contents}
 			,#{userId}
 			,#{commentId}
 			,0
 			,0
 			,now()
+			,1
 		)
 	</insert>
 	
-	<update id="updateCommentReply" parameterType="com.example.lol.model.CommentReply">
-		UPDATE cmt_comment_reply
+	<update id="updateCommentReply" parameterType="com.example.lol.model.Comment">
+		UPDATE cmt_comment
 		SET	contents = #{contents}
 			,modifyDate = now()
-		WHERE replyId = #{replyId}
+		WHERE commentId = #{commentId}
 	</update>
 	
-	<delete id="deleteCommentReply" parameterType="com.example.lol.model.CommentReply">
-		DELETE FROM cmt_comment_reply
-		WHERE replyId = #{replyId}
+	<delete id="deleteCommentReply" parameterType="com.example.lol.model.Comment">
+		DELETE FROM cmt_comment
+		WHERE commentId = #{commentId}
 	</delete>
 	
-	<select id="selectCommentReply" parameterType="com.example.lol.model.CommentReply" resultType="java.util.Map">
-		SELECT replyId
+	<select id="selectCommentReply" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+		SELECT commentId
 			,contents
 			,userId
-			,commentId
 			,isDelete
 			,reportCnt
 			,createDate
 			,modifyDate
-		FROM cmt_comment_reply
-		WHERE commentId = #{commentId}
+			,parentsId
+		FROM cmt_comment
+		WHERE depth = 1
 	</select>
 	
-	<select id="selectCommentReplyDetail" parameterType="com.example.lol.model.CommentReply" resultType="java.util.Map">
-		SELECT replyId
+	<select id="selectCommentReplyDetail" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+		SELECT commentId
 			,contents
 			,userId
-			,commentId
 			,isDelete
 			,reportCnt
 			,createDate
 			,modifyDate
-		FROM cmt_comment_reply
+			,parentsId
+		FROM cmt_comment
 		WHERE commentId = #{commentId}
-		AND replyId = #{replyId}
 	</select>
 	
-	<update id="updateReport" parameterType="com.example.lol.model.CommentReply">
-		UPDATE  cmt_comment_reply
+	<update id="updateReport" parameterType="com.example.lol.model.Comment">
+		UPDATE  cmt_comment
 		SET reportCnt = #{reportCnt}
-		WHERE replyId = #{replyId}
+		WHERE commentId = #{commentId}
 	</update>
 </mapper>

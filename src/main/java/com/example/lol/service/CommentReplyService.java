@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.example.lol.mapper.CommentMapper;
 import com.example.lol.mapper.CommentReplyMapper;
 import com.example.lol.model.Comment;
-import com.example.lol.model.CommentReply;
 import com.example.lol.model.Report;
 
 @Service
@@ -21,64 +20,65 @@ public class CommentReplyService {
 	@Autowired
 	CommentMapper commentMapper;
 	
-	public CommentReply createCommentReply(long commentId, CommentReply commentReply) {
-		
-		commentReply.setCommentId(commentId);
-		commentReplyMapper.insertCommentReply(commentReply);
-		
-		return commentReply;
-	}
-	
-	public CommentReply modifyCommentReply(long commentId, long replyId, CommentReply commentReply) {
-		
-		commentReply.setCommentId(commentId);
-		commentReply.setReplyId(replyId);
-		commentReplyMapper.updateCommentReply(commentReply);
-		
-		return commentReply;
-	}
-	
-	public CommentReply deleteCommentReply(long commentId, long replyId) {
-		
-		CommentReply commentReply = CommentReply.builder()
-								.commentId(commentId)
-								.replyId(replyId)
-								.build();
-		
-		commentReplyMapper.deleteCommentReply(commentReply);
-		
-		return commentReply;
-	}
-	
-	public List<Map<String, Object>> getCommentReplyList(long commentId){
-		
-		CommentReply commentReply = CommentReply.builder()
-								.commentId(commentId)
-								.build();
-		
-		return commentReplyMapper.selectCommentReply(commentReply);
-	}
-	
-	public Map<String, Object> getCommentReplyDetail(long commentId, long replyId){
-		
-		CommentReply commentReply = CommentReply.builder()
-								.commentId(commentId)
-								.replyId(replyId)
-								.build();
-		
-		return commentReplyMapper.selectCommentReplyDetail(commentReply);
-	}
-	
-	public CommentReply createReport(long commentId, long replyId, Map<String, Object> paramMap) {
+	public Comment createCommentReply(long contentsId,long commentId, Comment comment) {
 
-		CommentReply commentReply = CommentReply.builder()
+		comment.setContentsId(contentsId);
+		comment.setCommentId(commentId);
+		commentReplyMapper.insertCommentReply(comment);
+		
+		return comment;
+	}
+	
+	public Comment modifyCommentReply(long contentsId,long commentId, Comment comment) {
+		
+		comment.setContentsId(contentsId);
+		comment.setCommentId(commentId);
+		commentReplyMapper.updateCommentReply(comment);
+		
+		return comment;
+	}
+	
+	public Comment deleteCommentReply(long contentsId,long commentId) {
+		
+		Comment comment = Comment.builder()
+								.contentsId(contentsId)
 								.commentId(commentId)
-								.replyId(replyId)
+								.build();
+		
+		commentReplyMapper.deleteCommentReply(comment);
+		
+		return comment;
+	}
+	
+	public List<Map<String, Object>> getCommentReplyList(long contentsId,long commentId){
+		
+		Comment comment = Comment.builder()
+						.contentsId(contentsId)
+						.commentId(commentId)
+						.build();
+		
+		return commentReplyMapper.selectCommentReply(comment);
+	}
+	
+	public Map<String, Object> getCommentReplyDetail(long contentsId,long commentId){
+		
+		Comment comment = Comment.builder()
+						.contentsId(contentsId)
+						.commentId(commentId)
+						.build();
+		
+		return commentReplyMapper.selectCommentReplyDetail(comment);
+	}
+	
+	public Comment createReport(long contentsId,long commentId, Map<String, Object> paramMap) {
+
+		Comment comment = Comment.builder()
+								.contentsId(contentsId)
+								.commentId(commentId)
 								.build();
 		
 		Report report = Report.builder()
 					.commentId(commentId)
-					.replyId(replyId)
 					.userId((int)paramMap.get("userId"))
 					.reason((String)paramMap.get("reason"))
 					.build();
@@ -86,17 +86,17 @@ public class CommentReplyService {
 		Boolean isReport = commentMapper.isReport(report);
 		
 		if(!isReport) {
-			commentReply.setReportCnt(reportCnt(commentReply)+1);
+			comment.setReportCnt(reportCnt(comment)+1);
 			
-			commentReplyMapper.updateReport(commentReply);
+			commentReplyMapper.updateReport(comment);
 			commentMapper.insertReport(report);
 		}
 		
-		return commentReply;
+		return comment;
 	}
 	
-	public Long reportCnt(CommentReply commentReply) {
-		Map<String, Object> resultMap = commentReplyMapper.selectCommentReplyDetail(commentReply);
+	public Long reportCnt(Comment comment) {
+		Map<String, Object> resultMap = commentReplyMapper.selectCommentReplyDetail(comment);
 		return (Long) resultMap.get("reportCnt");
 	}
 }

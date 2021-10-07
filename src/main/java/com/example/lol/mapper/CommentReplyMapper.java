@@ -5,14 +5,14 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.lol.model.CommentReply;
+import com.example.lol.model.Comment;
 
 @Mapper
 public interface CommentReplyMapper {
-	public int insertCommentReply(CommentReply commentReply);
-	public int updateCommentReply(CommentReply commentReply);
-	public int deleteCommentReply(CommentReply commentReply);
-	public List<Map<String, Object>> selectCommentReply(CommentReply commentReply);
-	public Map<String, Object> selectCommentReplyDetail(CommentReply commentReply);
-	public int updateReport(CommentReply commentReply);
+	public int insertCommentReply(Comment comment);
+	public int updateCommentReply(Comment comment);
+	public int deleteCommentReply(Comment comment);
+	public List<Map<String, Object>> selectCommentReply(Comment comment);
+	public Map<String, Object> selectCommentReplyDetail(Comment comment);
+	public int updateReport(Comment comment);
 }

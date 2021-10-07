@@ -33,7 +33,7 @@ public class CommunityController {
 	
 	@PutMapping("/{categoryId}/{communityId}")
 	public Community modiftyCommunityController(@PathVariable("categoryId") long categoryId
-												,@PathVariable("communityId") long communityId	
+												, @PathVariable("communityId") long communityId	
 												, @RequestBody Community community) {
 			
 		return communityService.modifyCommunity(communityId,categoryId,community);

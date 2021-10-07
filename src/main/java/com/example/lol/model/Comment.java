@@ -21,4 +21,6 @@ public class Comment {
 	private long reportCnt;
 	private Date createDate;
 	private Date modfiyDate;
+	private int detph;
+	private long parentsId;
 }

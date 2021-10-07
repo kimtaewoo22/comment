@@ -10,6 +10,7 @@
 			,isDelete
 			,reportCnt
 			,createDate
+			,depth
 		) VALUES (
 			#{contentsId}
 			,#{userId}
@@ -18,6 +19,7 @@
 			,0
 			,0
 			,now()
+			,0
 		)
 	</insert>
 	<update id="updateComment" parameterType="com.example.lol.model.Comment">
@@ -33,18 +35,20 @@
 	</delete>
 	
 	<select id="selectComment" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
-		SELECT commentId
-			,contentsId
-			,userId
-			,contents
-			,likeCnt
-			,isDelete
-			,reportCnt
-			,createDate
-			,modifyDate
-		FROM cmt_comment
-		WHERE contentsId = #{contentsId}
-		AND isDelete = 0
+		SELECT A.commentId
+			,A.contentsId
+			,A.userId
+			,A.contents
+			,A.likeCnt
+			,A.isDelete
+			,A.reportCnt
+			,A.createDate
+			,A.modifyDate
+			,B.contents AS CT
+		FROM cmt_comment A
+		LEFT JOIN cmt_comment_reply B ON A.commentId  = B.commentId
+		WHERE A.contentsId = #{contentsId}
+		AND A.isDelete = 0
 	</select>
 	
 	<insert id="insertLike" parameterType="com.example.lol.model.Like" useGeneratedKeys="true" keyProperty="likeId">

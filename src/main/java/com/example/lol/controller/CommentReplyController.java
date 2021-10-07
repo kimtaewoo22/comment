@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.lol.model.CommentReply;
+import com.example.lol.model.Comment;
 import com.example.lol.model.common.CommentConst;
 import com.example.lol.service.CommentReplyService;
 
@@ -24,46 +24,41 @@ public class CommentReplyController {
 	@Autowired
 	CommentReplyService commentReplyService;
 	
-	@PostMapping("/{commentId}")
-	public CommentReply createCommentReplyController(@PathVariable("commentId") long commentId 
-													, @RequestBody CommentReply commentReply) {
+	@PostMapping("/{contentsId}/{commentId}")
+	public Comment createCommentReplyController(@PathVariable("contentsId") long contentsId
+												,@PathVariable("commentId") long commentId	
+												,@RequestBody Comment comment) {
 		
-		return commentReplyService.createCommentReply(commentId ,commentReply);
+		return commentReplyService.createCommentReply(contentsId,commentId ,comment);
 	}
 	
-	@PutMapping("/{commentId}/{replyId}")
-	public CommentReply modifyCommentReplyController(@PathVariable("commentId") long commentId 
-													, @PathVariable("replyId") long replyId 
-													, @RequestBody CommentReply commentReply ) {
+	@PutMapping("/{contentsId}/{commentId}")
+	public Comment modifyCommentReplyController(@PathVariable("contentsId") long contentsId
+												,@PathVariable("commentId") long commentId
+												,@RequestBody Comment comment ) {
 		
-		return commentReplyService.modifyCommentReply(commentId, replyId, commentReply);
+		return commentReplyService.modifyCommentReply(contentsId,commentId, comment);
 	}
 	
-	@DeleteMapping("/{commentId}/{replyId}")
-	public CommentReply deleteCommentReplyController(@PathVariable("commentId") long commentId 
-													, @PathVariable("replyId") long replyId ) {
+	@DeleteMapping("/{contentsId}/{commentId}")
+	public Comment deleteCommentReplyController(@PathVariable("contentsId") long contentsId
+												,@PathVariable("commentId") long commentId) {
 		
-		return commentReplyService.deleteCommentReply(commentId, replyId);
+		return commentReplyService.deleteCommentReply(contentsId,commentId);
 	}
 	
-	@GetMapping("/{commentId}")
-	public List<Map<String, Object>> getCommentReplyController(@PathVariable("commentId") long commentId){
+	@GetMapping("/{contentsId}/{commentId}")
+	public List<Map<String, Object>> getCommentReplyController(@PathVariable("contentsId") long contentsId
+																,@PathVariable("commentId") long commentId){
 		
-		return commentReplyService.getCommentReplyList(commentId);
+		return commentReplyService.getCommentReplyList(contentsId,commentId);
 	}
 	
-	@GetMapping("/{commentId}/{replyId}")
-	public Map<String, Object> getCommentReplyDetailController(@PathVariable("commentId") long commentId
-																	,@PathVariable("replyId") long replyId){
+	@PostMapping("/{contentsId}/{commentId}/report")
+	public Comment createCommentReplyReportController(@PathVariable("contentsId") long contentsId
+														,@PathVariable("commentId") long commentId
+														,@RequestBody Map<String, Object> paramMap) {
 		
-		return commentReplyService.getCommentReplyDetail(commentId, replyId);
-	}
-	
-	@PostMapping("/{commentId}/{replyId}/report")
-	public CommentReply createCommentReplyReportController(@PathVariable("commentId") long commentId
-														, @PathVariable("replyId") long replyId
-														, @RequestBody Map<String, Object> paramMap) {
-		
-		return commentReplyService.createReport(commentId, replyId, paramMap);
+		return commentReplyService.createReport(contentsId,commentId, paramMap);
 	}
 }
