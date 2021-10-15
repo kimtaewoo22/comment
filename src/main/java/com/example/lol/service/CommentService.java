@@ -1,15 +1,22 @@
 package com.example.lol.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.lol.config.exception.ServiceException;
 import com.example.lol.mapper.CommentMapper;
+import com.example.lol.mapper.ContentsMapper;
+import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.Comment;
 import com.example.lol.model.Like;
 import com.example.lol.model.Report;
+import com.example.lol.model.common.ResVO;
+import com.example.lol.model.common.ResultCode;
 
 @Service
 public class CommentService {
@@ -17,47 +24,119 @@ public class CommentService {
 	@Autowired
 	CommentMapper commentMapper;
 	
-	public Comment createComment(long contentsId,Comment comment) {
-		
+	@Autowired
+	ContentsMapper contentsMapper;
+	
+	@Autowired
+	UserMapper userMapper;
+	
+	public ResVO createComment(long contentsId,Comment comment) {
+
 		comment.setContentsId(contentsId);
 		
-		commentMapper.insertComment(comment);
+		Boolean isContentsId = contentsMapper.isContentsId(contentsId);
 		
-		return comment;
+		if(!isContentsId) {
+			throw new ServiceException(ResultCode.ERROR_1003);
+		}
+		
+		try {
+			commentMapper.insertComment(comment);
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment modfiyComment(long contentsId, long commentId, Comment comment) {
+	public ResVO modfiyComment(long contentsId, long commentId, Comment comment) {
 		
 		comment.setContentsId(contentsId);
 		comment.setCommentId(commentId);
 		
-		commentMapper.updateComment(comment);
+		Boolean isComment = commentMapper.isComment(comment);
+
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
 		
-		return comment;
+		try {
+			commentMapper.updateComment(comment);
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment deleteComment(long contentsId,long commentId) {
+	public ResVO deleteComment(long contentsId,long commentId) {
 		
 		Comment comment = Comment.builder()
 				.commentId(commentId)
 				.contentsId(contentsId)
 				.build();
 		
-		commentMapper.deleteComment(comment);
+		Boolean isComment = commentMapper.isComment(comment);
 		
-		return comment;
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
+		try {
+			commentMapper.deleteComment(comment);
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public List<Map<String, Object>> getCommentList(long contentsId){
+	public ResVO getCommentList(long contentsId){
+		
+		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
+		Boolean isContentsId = contentsMapper.isContentsId(contentsId);
+		
+		if(!isContentsId) {
+			throw new ServiceException(ResultCode.ERROR_1003);
+		}
 		
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
 				.build();
+		try {
+			commentList = commentMapper.selectComment(comment);
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
 		
-		return commentMapper.selectComment(comment);
+		return ResVO.builder()
+				.data(commentList)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment createLike(long contentsId, long commentId, Map<String, Long> paramMap) {
+	public ResVO createLike(long contentsId, long commentId, Map<String, Object> paramMap) {
 		
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
@@ -66,33 +145,64 @@ public class CommentService {
 		
 		Like like = Like.builder()
 				.commentId(commentId)
-				.userId(paramMap.get("userId"))
+				.userId(Long.valueOf(paramMap.get("userId").toString()))
 				.build();
 		
-		Boolean islike = commentMapper.isLike(like);
+		Boolean isComment = commentMapper.isComment(comment);
+		Boolean isUserId = userMapper.isUserId(Long.valueOf(paramMap.get("userId").toString()));
 		
-		if(islike) {
-			comment.setLikeCnt(likeCnt(comment)-1);
-			
-			commentMapper.updateLike(comment);
-			commentMapper.deleteLike(like);
-		}else {
-			comment.setLikeCnt(likeCnt(comment)+1);
-			
-			commentMapper.updateLike(comment);
-			commentMapper.insertLike(like);
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		if(!isUserId) {
+			throw new ServiceException(ResultCode.ERROR_1001);
 		}
 		
-		return comment;
+		try {
+			Boolean islike = commentMapper.isLike(like);
+			
+			if(islike) {
+				comment.setLikeCnt(likeCnt(comment)-1);
+				
+				commentMapper.updateLike(comment);
+				commentMapper.deleteLike(like);
+			}else {
+				comment.setLikeCnt(likeCnt(comment)+1);
+				
+				commentMapper.updateLike(comment);
+				commentMapper.insertLike(like);
+			}
+			
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Long likeCnt(Comment comment) {
-		Map<String, Object> resultMap = commentMapper.selectCommentDetail(comment);
+	public long likeCnt(Comment comment) {
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try {
+			resultMap = commentMapper.selectCommentDetail(comment);
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
 		return (Long) resultMap.get("likeCnt");
 	}
 	
-	public Comment createReport(long contentsId, long commentId, Map<String, Object> paramMap) {
-
+	public ResVO createReport(long contentsId, long commentId, Map<String, Object> paramMap) {
+		
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
 				.commentId(commentId)
@@ -100,24 +210,56 @@ public class CommentService {
 		
 		Report report = Report.builder()
 				.commentId(commentId)
-				.userId((int)paramMap.get("userId"))
-				.reason((String)paramMap.get("reason"))
+				.userId(Long.valueOf(paramMap.get("userId").toString()))
+				.reason(paramMap.get("reason").toString())
 				.build();
 		
-		Boolean isReport = commentMapper.isReport(report);
+		Boolean isComment = commentMapper.isComment(comment);
+		Boolean isUserId = userMapper.isUserId(Long.valueOf(paramMap.get("userId").toString()));
 		
-		if(!isReport) {
-			comment.setReportCnt(reportCnt(comment)+1);
-			
-			commentMapper.updateReport(comment);
-			commentMapper.insertReport(report);
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		if(!isUserId) {
+			throw new ServiceException(ResultCode.ERROR_1001);
 		}
 		
-		return comment;
+		try {
+			Boolean isReport = commentMapper.isReport(report);
+			
+			if(!isReport) {
+				comment.setReportCnt(reportCnt(comment)+1);
+				
+				commentMapper.updateReport(comment);
+				commentMapper.insertReport(report);
+			}
+			
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Long reportCnt(Comment comment) {
-		Map<String, Object> resultMap = commentMapper.selectCommentDetail(comment);
+	public long reportCnt(Comment comment) {
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try {
+			resultMap = commentMapper.selectCommentDetail(comment);
+			
+		}catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
 		return (Long) resultMap.get("reportCnt");
 	}
 }

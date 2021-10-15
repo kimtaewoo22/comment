@@ -13,15 +13,30 @@ import com.example.lol.model.Report;
 public interface CommentMapper {
 	
 	public int insertComment(Comment comment);
+	
 	public int updateComment(Comment comment);
+	
 	public int deleteComment(Comment comment);
+	
 	public List<Map<String, Object>> selectComment(Comment comment);
+	
 	public int insertLike(Like like);
+	
 	public int updateLike(Comment comment);
+	
 	public boolean isLike(Like like);
+	
 	public Map<String, Object> selectCommentDetail(Comment comment);
+	
 	public int deleteLike(Like like);
+	
 	public int insertReport(Report report);
+	
 	public int updateReport(Comment comment);
+	
 	public boolean isReport(Report report);
+
+	public boolean isCommentId(long commentId);
+	
+	public boolean isComment(Comment comment);
 }

@@ -44,9 +44,7 @@
 			,A.reportCnt
 			,A.createDate
 			,A.modifyDate
-			,B.contents AS CT
 		FROM cmt_comment A
-		LEFT JOIN cmt_comment_reply B ON A.commentId  = B.commentId
 		WHERE A.contentsId = #{contentsId}
 		AND A.isDelete = 0
 	</select>
@@ -130,4 +128,23 @@
 			AND replyId = #{replyId}
 		</if>
 	</select>
+	
+	<select id="isCommentId" parameterType="Long" resultType="Boolean">
+		SELECT count(1)
+		FROM cmt_comment
+		WHERE commentId = #{commentId}
+	</select>
+	
+	<select id="isComment" parameterType="com.example.lol.model.Comment" resultType="Boolean">
+		SELECT count(1)
+		FROM cmt_comment
+		WHERE 1=1 
+		<if test="commentId != null and commentId !=''">
+			AND commentId = #{commentId}
+		</if>
+		<if test="commentId != null and commentId !=''">
+			AND contentsId = #{contentsId}
+		</if>
+	</select>
+	
 </mapper>
