@@ -19,4 +19,6 @@ public interface CommunityMapper {
 	public List<Map<String, Object>> selectCommunity(Community community);
 	
 	public Map<String,Object> selectCommunityDetail(Community community);
+	
+	public Boolean isCommunityId(long communityId);
 }

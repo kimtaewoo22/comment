@@ -18,10 +18,10 @@ public class Category {
 		
 	private long categoryId;
 	private String categoryNm;
-	private String createId;
+	private long createId;
 //	@JsonIgnore
 	private LocalDateTime createDate;
-	private String modifyId;
+	private long modifyId;
 //	@JsonIgnore
 	private LocalDateTime modifyDate;
 	

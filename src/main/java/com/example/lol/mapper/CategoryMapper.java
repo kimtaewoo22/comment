@@ -20,4 +20,5 @@ public interface CategoryMapper {
 	
 	public Map<String, Object> selectCategoryDetail(Category category);
 	
+	public boolean isCategoryId(long categoryId);
 }

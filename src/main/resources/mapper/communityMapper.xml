@@ -53,4 +53,10 @@
 		WHERE categoryId = #{categoryId}
 			AND communityId = #{communityId}
 	</select>
+	
+	<select id="isCommunityId" parameterType="Long" resultType="Boolean">
+		SELECT count(1)
+		FROM cmt_community
+		WHERE communityId = #{communityId}
+	</select>
 </mapper>

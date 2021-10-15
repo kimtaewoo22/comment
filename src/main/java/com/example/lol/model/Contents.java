@@ -16,8 +16,8 @@ public class Contents {
 	private String contentsNm;
 	private long communityId;
 	private String contents;
-	private String createId;
+	private long createId;
 	private Date createDate;
-	private String modifyId;
+	private long modifyId;
 	private Date modifyDate;
 }

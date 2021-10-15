@@ -58,4 +58,10 @@
 		WHERE communityId = #{communityId}
 		AND contentsId = #{contentsId}
 	</select>
+	
+	<select id="isContentsId" parameterType="Long" resultType="Boolean">
+		SELECT count(1)
+		FROM cmt_contents
+		WHERE contentsId = #{contentsId}
+	</select>
 </mapper>

@@ -9,9 +9,17 @@ import com.example.lol.model.User;
 
 @Mapper
 public interface UserMapper {
+	
 	public int insertUser(User user);
+	
 	public int updateUser(User user);
+	
 	public int deleteUser(User user);
+	
 	public List<Map<String, Object>> selectUser();
+	
 	public Map<String, Object> selectUserDetail(User user);
+	
+	public Boolean isUserId(Long userId);
+	
 }

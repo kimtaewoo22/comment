@@ -16,9 +16,9 @@ public class Community {
 	private long communityId;
 	private long categoryId;
 	private String communityNm;
-	private String createId;
+	private long createId;
 	private Date createDate;
-	private String modifyId;
+	private long modifyId;
 	private Date modifyDate;
 	
 }

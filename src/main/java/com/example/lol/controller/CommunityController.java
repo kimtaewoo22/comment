@@ -1,8 +1,5 @@
 package com.example.lol.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.Community;
 import com.example.lol.model.common.CommentConst;
+import com.example.lol.model.common.ResVO;
 import com.example.lol.service.CommunityService;
 
 @RestController
@@ -25,14 +23,14 @@ public class CommunityController {
 	CommunityService communityService;
 	
 	@PostMapping("/{categoryId}")
-	public Community createCommunityController(@PathVariable("categoryId") long categoryId 
+	public ResVO createCommunityController(@PathVariable("categoryId") long categoryId 
 										, @RequestBody Community community) {
 		
 		return communityService.createCommunity(categoryId ,community);
 	}
 	
 	@PutMapping("/{categoryId}/{communityId}")
-	public Community modiftyCommunityController(@PathVariable("categoryId") long categoryId
+	public ResVO modiftyCommunityController(@PathVariable("categoryId") long categoryId
 												, @PathVariable("communityId") long communityId	
 												, @RequestBody Community community) {
 			
@@ -40,20 +38,20 @@ public class CommunityController {
 	}
 	
 	@DeleteMapping("/{categoryId}/{communityId}")
-	public Community deleteCommunityController(@PathVariable("communityId") long communityId
+	public ResVO deleteCommunityController(@PathVariable("communityId") long communityId
 										 		,@PathVariable("categoryId") long categoryId) {
 		
 		return communityService.deleteCommunity(communityId,categoryId);
 	}
 	
 	@GetMapping("/{categoryId}")
-	public List<Map<String, Object>> getCommunity(@PathVariable("categoryId") long categoryId){
+	public ResVO getCommunity(@PathVariable("categoryId") long categoryId){
 		
 		return communityService.getCommunity(categoryId);
 	}
 	
 	@GetMapping("/{categoryId}/{communityId}")
-	public Map<String, Object> getCommunityDetail(@PathVariable("categoryId") long categoryId
+	public ResVO getCommunityDetail(@PathVariable("categoryId") long categoryId
 													,@PathVariable("communityId") long communityId){
 		
 		return communityService.getCommunityDetail(communityId,categoryId);

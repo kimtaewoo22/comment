@@ -1,8 +1,5 @@
 package com.example.lol.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.Contents;
 import com.example.lol.model.common.CommentConst;
+import com.example.lol.model.common.ResVO;
 import com.example.lol.service.ContentsService;
 
 @RestController
@@ -25,14 +23,14 @@ public class ContentsController {
 	ContentsService contentsService;
 	
 	@PostMapping("/{communityId}")
-	public Contents createContentsController(@PathVariable("communityId") long communityId
+	public ResVO createContentsController(@PathVariable("communityId") long communityId
 											,@RequestBody Contents contents) {
 		
 		return contentsService.createContents(communityId,contents);
 	}
 	
 	@PutMapping("/{communityId}/{contentsId}")
-	public Contents modifyContentsController(@PathVariable("contentsId") long contentsId
+	public ResVO modifyContentsController(@PathVariable("contentsId") long contentsId
 											,@PathVariable("communityId") long communityId
 											,@RequestBody Contents contents) {
 		
@@ -40,20 +38,20 @@ public class ContentsController {
 	}
 	
 	@DeleteMapping("/{communityId}/{contentsId}")
-	public Contents deleteContentsController(@PathVariable("contentsId") long contentsId
+	public ResVO deleteContentsController(@PathVariable("contentsId") long contentsId
 											,@PathVariable("communityId") long communityId) {
 		
 		return contentsService.deleteContents(contentsId,communityId);
 	}
 	
 	@GetMapping("/{communityId}")
-	public List<Map<String, Object>> getContentsController(@PathVariable("communityId") long communityId){
+	public ResVO getContentsController(@PathVariable("communityId") long communityId){
 		
 		return contentsService.getContentsList(communityId);
 	}
 	
 	@GetMapping("/{communityId}/{contentsId}")
-	public Map<String, Object> getContentsDetailController(@PathVariable("communityId") long communityId
+	public ResVO getContentsDetailController(@PathVariable("communityId") long communityId
 														,@PathVariable("contentsId") long contentsId){
 		
 		return contentsService.getContentsDetail(contentsId,communityId);

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.Category;
 import com.example.lol.model.common.CommentConst;
+import com.example.lol.model.common.ResVO;
 import com.example.lol.service.CategoryService;
 
 @RestController
@@ -31,14 +32,14 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/{categoryId}")
-	public Category modiyCategoryController(@PathVariable("categoryId") long categoryId 
+	public ResVO modiyCategoryController(@PathVariable("categoryId") long categoryId 
 										, @RequestBody Category category) {
 		
 		return categoryService.modifyCategory(categoryId,category);
 	}
 	
 	@DeleteMapping("/{categoryId}")
-	public Category deleteCategoryController(@PathVariable("categoryId") long categoryId) {
+	public ResVO deleteCategoryController(@PathVariable("categoryId") long categoryId) {
 		
 		return categoryService.deleteCategory(categoryId);
 	}

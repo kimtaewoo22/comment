@@ -6,8 +6,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.lol.config.exception.ServiceException;
 import com.example.lol.mapper.CategoryMapper;
+import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.Category;
+import com.example.lol.model.common.ResVO;
+import com.example.lol.model.common.ResultCode;
 
 @Service
 public class CategoryService {
@@ -15,29 +19,72 @@ public class CategoryService {
 	@Autowired
 	CategoryMapper categoryMapper;
 	
+	@Autowired
+	UserMapper userMapper;
+	
 	public Category createCategory(Category category) {
 		
-		categoryMapper.insertCategory(category);
+		try {
+			categoryMapper.insertCategory(category);
+		} catch (Exception e) {
+			System.out.println("error :"+ e.getMessage());
+		}
 		
 		return category;
 	}
 	
-	public Category modifyCategory(Long categoryId, Category category) {
-		category.setCategoryId(categoryId);
+	public ResVO modifyCategory(Long categoryId, Category category) {
 		
-		categoryMapper.updateCategory(category);
+		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
+		Boolean isUserId = userMapper.isUserId(category.getModifyId());
 		
-		return category;
+		if(!isUserId) {
+			throw new ServiceException(ResultCode.ERROR_1001);
+		}
+		
+		if(!isCategoryId) {
+			throw new ServiceException(ResultCode.ERROR_1000);
+		}
+		
+		try {
+			category.setCategoryId(categoryId);
+			categoryMapper.updateCategory(category);
+		} catch (Exception e) {
+			System.out.println("error :"+ e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(category)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Category deleteCategory(Long categoryId) {
+	public ResVO deleteCategory(Long categoryId) {
+		
+		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
+		
+		if(!isCategoryId) {
+			throw new ServiceException(ResultCode.ERROR_1000);
+		}
+		
 		Category category = Category.builder()
 				.categoryId(categoryId)
 				.build();
 		
-		categoryMapper.deleteCategory(category);
+		try {
+			
+			categoryMapper.deleteCategory(category);
+			
+		} catch (Exception e) {
+			System.out.println("error :"+ e.getMessage());
+		}
 		
-		return category;
+		return ResVO.builder()
+				.data(category)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
 	public List<Map<String, Object>> getCategoryList(){
@@ -45,6 +92,13 @@ public class CategoryService {
 	}
 	
 	public Map<String, Object> getCategoryDetail(Long categoryId){
+		
+		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
+		
+		if(!isCategoryId) {
+			throw new ServiceException(ResultCode.ERROR_1000);
+		}
+		
 		Category category = Category.builder()
 				.categoryId(categoryId)
 				.build();

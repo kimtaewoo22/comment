@@ -47,4 +47,10 @@
 		FROM CMT_CATEGORY
 		WHERE categoryId = #{categoryId} 
 	</select>
+	
+	<select id="isCategoryId" parameterType="Long" resultType="Boolean">
+		SELECT count(1)
+		FROM CMT_CATEGORY
+		WHERE categoryId = #{categoryId}
+	</select>
 </mapper>
