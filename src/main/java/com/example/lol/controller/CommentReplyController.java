@@ -1,6 +1,5 @@
 package com.example.lol.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.Comment;
 import com.example.lol.model.common.CommentConst;
+import com.example.lol.model.common.ResVO;
 import com.example.lol.service.CommentReplyService;
 
 @RestController
@@ -25,7 +25,7 @@ public class CommentReplyController {
 	CommentReplyService commentReplyService;
 	
 	@PostMapping("/{contentsId}/{commentId}")
-	public Comment createCommentReplyController(@PathVariable("contentsId") long contentsId
+	public ResVO createCommentReplyController(@PathVariable("contentsId") long contentsId
 												,@PathVariable("commentId") long commentId	
 												,@RequestBody Comment comment) {
 		
@@ -33,7 +33,7 @@ public class CommentReplyController {
 	}
 	
 	@PutMapping("/{contentsId}/{commentId}")
-	public Comment modifyCommentReplyController(@PathVariable("contentsId") long contentsId
+	public ResVO modifyCommentReplyController(@PathVariable("contentsId") long contentsId
 												,@PathVariable("commentId") long commentId
 												,@RequestBody Comment comment ) {
 		
@@ -41,21 +41,21 @@ public class CommentReplyController {
 	}
 	
 	@DeleteMapping("/{contentsId}/{commentId}")
-	public Comment deleteCommentReplyController(@PathVariable("contentsId") long contentsId
+	public ResVO deleteCommentReplyController(@PathVariable("contentsId") long contentsId
 												,@PathVariable("commentId") long commentId) {
 		
 		return commentReplyService.deleteCommentReply(contentsId,commentId);
 	}
 	
 	@GetMapping("/{contentsId}/{commentId}")
-	public List<Map<String, Object>> getCommentReplyController(@PathVariable("contentsId") long contentsId
+	public ResVO getCommentReplyController(@PathVariable("contentsId") long contentsId
 																,@PathVariable("commentId") long commentId){
 		
 		return commentReplyService.getCommentReplyList(contentsId,commentId);
 	}
 	
 	@PostMapping("/{contentsId}/{commentId}/report")
-	public Comment createCommentReplyReportController(@PathVariable("contentsId") long contentsId
+	public ResVO createCommentReplyReportController(@PathVariable("contentsId") long contentsId
 														,@PathVariable("commentId") long commentId
 														,@RequestBody Map<String, Object> paramMap) {
 		

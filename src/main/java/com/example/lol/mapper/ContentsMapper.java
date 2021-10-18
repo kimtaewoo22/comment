@@ -20,5 +20,5 @@ public interface ContentsMapper {
 	
 	public Map<String, Object> selectContentsDetail(Contents contents);
 	
-	public boolean isContentsId(long contentsId);
+	public boolean isContents(Contents contents);
 }

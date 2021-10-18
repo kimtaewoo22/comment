@@ -13,6 +13,7 @@ import com.example.lol.mapper.CommentMapper;
 import com.example.lol.mapper.ContentsMapper;
 import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.Comment;
+import com.example.lol.model.Contents;
 import com.example.lol.model.Like;
 import com.example.lol.model.Report;
 import com.example.lol.model.common.ResVO;
@@ -32,15 +33,18 @@ public class CommentService {
 	
 	public ResVO createComment(long contentsId,Comment comment) {
 
-		comment.setContentsId(contentsId);
+		Contents contents = Contents.builder()
+								.contentsId(contentsId)
+								.build();
 		
-		Boolean isContentsId = contentsMapper.isContentsId(contentsId);
+		Boolean isContents = contentsMapper.isContents(contents);
 		
-		if(!isContentsId) {
+		if(!isContents) {
 			throw new ServiceException(ResultCode.ERROR_1003);
 		}
 		
 		try {
+			comment.setContentsId(contentsId);
 			commentMapper.insertComment(comment);
 		}catch (ServiceException e) {
 			throw new ServiceException(ResultCode.ERROR_9999);
@@ -111,16 +115,21 @@ public class CommentService {
 	
 	public ResVO getCommentList(long contentsId){
 		
-		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
-		Boolean isContentsId = contentsMapper.isContentsId(contentsId);
+		Contents contents = Contents.builder()
+								.contentsId(contentsId)
+								.build();
 		
-		if(!isContentsId) {
+		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
+		Boolean isContents = contentsMapper.isContents(contents);
+		
+		if(!isContents) {
 			throw new ServiceException(ResultCode.ERROR_1003);
 		}
 		
 		Comment comment = Comment.builder()
 				.contentsId(contentsId)
 				.build();
+		
 		try {
 			commentList = commentMapper.selectComment(comment);
 		}catch (ServiceException e) {
@@ -149,13 +158,13 @@ public class CommentService {
 				.build();
 		
 		Boolean isComment = commentMapper.isComment(comment);
-		Boolean isUserId = userMapper.isUserId(Long.valueOf(paramMap.get("userId").toString()));
+		Boolean isUser = userMapper.isUser(Long.valueOf(paramMap.get("userId").toString()));
 		
 		if(!isComment) {
 			throw new ServiceException(ResultCode.ERROR_2000);
 		}
-		if(!isUserId) {
-			throw new ServiceException(ResultCode.ERROR_1001);
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
 		}
 		
 		try {
@@ -198,7 +207,7 @@ public class CommentService {
 			System.out.println("error : "+e.getMessage());
 		}
 		
-		return (Long) resultMap.get("likeCnt");
+		return (long) resultMap.get("likeCnt");
 	}
 	
 	public ResVO createReport(long contentsId, long commentId, Map<String, Object> paramMap) {
@@ -215,13 +224,13 @@ public class CommentService {
 				.build();
 		
 		Boolean isComment = commentMapper.isComment(comment);
-		Boolean isUserId = userMapper.isUserId(Long.valueOf(paramMap.get("userId").toString()));
+		Boolean isUser = userMapper.isUser(Long.valueOf(paramMap.get("userId").toString()));
 		
 		if(!isComment) {
 			throw new ServiceException(ResultCode.ERROR_2000);
 		}
-		if(!isUserId) {
-			throw new ServiceException(ResultCode.ERROR_1001);
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
 		}
 		
 		try {
@@ -232,6 +241,8 @@ public class CommentService {
 				
 				commentMapper.updateReport(comment);
 				commentMapper.insertReport(report);
+			}else {
+				throw new ServiceException(ResultCode.ERROR_4000);
 			}
 			
 		}catch (ServiceException e) {
@@ -260,6 +271,6 @@ public class CommentService {
 			System.out.println("error : "+e.getMessage());
 		}
 		
-		return (Long) resultMap.get("reportCnt");
+		return (long) resultMap.get("reportCnt");
 	}
 }

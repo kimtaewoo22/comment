@@ -59,9 +59,15 @@
 		AND contentsId = #{contentsId}
 	</select>
 	
-	<select id="isContentsId" parameterType="Long" resultType="Boolean">
+	<select id="isContents" parameterType="com.example.lol.model.Contents" resultType="Boolean">
 		SELECT count(1)
 		FROM cmt_contents
-		WHERE contentsId = #{contentsId}
+		WHERE 1=1
+		<if test="contentsId != null and contentsId != ''">
+			and contentsId = #{contentsId}
+		</if>
+		<if test="">
+			and communityId = #{communityId}
+		</if> 
 	</select>
 </mapper>

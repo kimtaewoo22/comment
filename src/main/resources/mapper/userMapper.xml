@@ -50,7 +50,7 @@
 		WHERE userId = #{userId}
 	</select>
 	
-	<select id="isUserId" parameterType="Long" resultType="Boolean">
+	<select id="isUser" parameterType="Long" resultType="Boolean">
 		SELECT count(1)
 		FROM cmt_user
 		WHERE userId = #{userId}

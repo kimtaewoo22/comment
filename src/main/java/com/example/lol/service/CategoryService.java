@@ -1,5 +1,7 @@
 package com.example.lol.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,21 +24,29 @@ public class CategoryService {
 	@Autowired
 	UserMapper userMapper;
 	
-	public Category createCategory(Category category) {
+	public ResVO createCategory(Category category) {
 		
 		try {
+			
 			categoryMapper.insertCategory(category);
+			
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
 		} catch (Exception e) {
 			System.out.println("error :"+ e.getMessage());
 		}
 		
-		return category;
+		return ResVO.builder()
+				.data(category)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public ResVO modifyCategory(Long categoryId, Category category) {
+	public ResVO modifyCategory(long categoryId, Category category) {
 		
 		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
-		Boolean isUserId = userMapper.isUserId(category.getModifyId());
+		Boolean isUserId = userMapper.isUser(category.getModifyId());
 		
 		if(!isUserId) {
 			throw new ServiceException(ResultCode.ERROR_1001);
@@ -49,6 +59,8 @@ public class CategoryService {
 		try {
 			category.setCategoryId(categoryId);
 			categoryMapper.updateCategory(category);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
 		} catch (Exception e) {
 			System.out.println("error :"+ e.getMessage());
 		}
@@ -60,7 +72,7 @@ public class CategoryService {
 				.build();
 	}
 	
-	public ResVO deleteCategory(Long categoryId) {
+	public ResVO deleteCategory(long categoryId) {
 		
 		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
 		
@@ -76,6 +88,8 @@ public class CategoryService {
 			
 			categoryMapper.deleteCategory(category);
 			
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
 		} catch (Exception e) {
 			System.out.println("error :"+ e.getMessage());
 		}
@@ -87,12 +101,30 @@ public class CategoryService {
 				.build();
 	}
 	
-	public List<Map<String, Object>> getCategoryList(){
-		return categoryMapper.selectCategory();
+	public ResVO getCategoryList(){
+		
+		List<Map<String, Object>> categoryList = new ArrayList<Map<String,Object>>();
+		
+		try {
+			
+			categoryList = categoryMapper.selectCategory();
+			
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		} catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(categoryList)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Map<String, Object> getCategoryDetail(Long categoryId){
+	public ResVO getCategoryDetail(long categoryId){
 		
+		Map<String, Object> categoryMap = new HashMap<String, Object>();
 		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
 		
 		if(!isCategoryId) {
@@ -103,6 +135,20 @@ public class CategoryService {
 				.categoryId(categoryId)
 				.build();
 		
-		return categoryMapper.selectCategoryDetail(category);
+		try {
+			
+			categoryMap = categoryMapper.selectCategoryDetail(category);
+			
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		} catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(categoryMap)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 }

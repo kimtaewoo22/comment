@@ -54,9 +54,15 @@
 			AND communityId = #{communityId}
 	</select>
 	
-	<select id="isCommunityId" parameterType="Long" resultType="Boolean">
+	<select id="isCommunity" parameterType="com.example.lol.model.Community" resultType="Boolean">
 		SELECT count(1)
 		FROM cmt_community
-		WHERE communityId = #{communityId}
+		WHERE 1=1
+		<if test="communityId != null and communityId !=''">
+			communityId = #{communityId}
+		</if> 
+		<if test="categoryId != null and categoryId !=''">
+			categoryId = #{categoryId}
+		</if>
 	</select>
 </mapper>

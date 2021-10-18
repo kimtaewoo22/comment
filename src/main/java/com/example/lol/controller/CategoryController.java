@@ -26,7 +26,7 @@ public class CategoryController {
 	CategoryService categoryService;
 	
 	@PostMapping("")
-	public Category createCategoryController(@RequestBody Category category) {
+	public ResVO createCategoryController(@RequestBody Category category) {
 		
 		return categoryService.createCategory(category);
 	}
@@ -45,13 +45,13 @@ public class CategoryController {
 	}
 	
 	@GetMapping("")
-	public List<Map<String, Object>> getCategoryListController(){
+	public ResVO getCategoryListController(){
 		
 		return categoryService.getCategoryList();
 	}
 	
 	@GetMapping("/{categoryId}")
-	public Map<String, Object> getCategoryDetailController(@PathVariable("categoryId") long categoryId){
+	public ResVO getCategoryDetailController(@PathVariable("categoryId") long categoryId){
 		
 		return categoryService.getCategoryDetail(categoryId);
 	}

@@ -142,7 +142,7 @@
 		<if test="commentId != null and commentId !=''">
 			AND commentId = #{commentId}
 		</if>
-		<if test="commentId != null and commentId !=''">
+		<if test="contentsId != null and contentsId !=''">
 			AND contentsId = #{contentsId}
 		</if>
 	</select>

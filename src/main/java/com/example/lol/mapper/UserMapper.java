@@ -20,6 +20,6 @@ public interface UserMapper {
 	
 	public Map<String, Object> selectUserDetail(User user);
 	
-	public Boolean isUserId(Long userId);
+	public Boolean isUser(long userId);
 	
 }

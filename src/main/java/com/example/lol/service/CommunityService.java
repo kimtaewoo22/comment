@@ -31,14 +31,13 @@ public class CommunityService {
 	public ResVO createCommunity(long categoryId,Community community) {
 		
 		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
-		Boolean isUserId = userMapper.isUserId(community.getCreateId());
+		Boolean isUser = userMapper.isUser(community.getCreateId());
 		
 		if(!isCategoryId) {
 			throw new ServiceException(ResultCode.ERROR_1000);
 		}
-		
-		if(!isUserId) {
-			throw new ServiceException(ResultCode.ERROR_1001);
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
 		}
 		
 		try {
@@ -59,18 +58,19 @@ public class CommunityService {
 	
 	public ResVO modifyCommunity(long communityId,long categoryId,Community community) {
 		
-		Boolean isCommunityId = communityMapper.isCommunityId(communityId);
-		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
-		Boolean isUserId = userMapper.isUserId(community.getModifyId());
+		community = Community.builder()
+				.categoryId(categoryId)
+				.communityId(communityId)
+				.build();
 		
-		if(!isCommunityId) {
-			throw new ServiceException(ResultCode.ERROR_1002);
+		Boolean isCommunity = communityMapper.isCommunity(community);
+		Boolean isUser = userMapper.isUser(community.getModifyId());
+		
+		if(!isCommunity) {
+			throw new ServiceException(ResultCode.ERROR_2000);
 		}
-		if(!isCategoryId) {
-			throw new ServiceException(ResultCode.ERROR_1000);
-		}
-		if(!isUserId) {
-			throw new ServiceException(ResultCode.ERROR_1001);
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
 		}
 		
 		try {
@@ -92,20 +92,17 @@ public class CommunityService {
 	
 	public ResVO deleteCommunity(long communityId,long categoryId) {
 		
-		Boolean isCommunityId = communityMapper.isCommunityId(communityId);
-		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
-		
-		if(!isCommunityId) {
-			throw new ServiceException(ResultCode.ERROR_1002);
-		}
-		if(!isCategoryId) {
-			throw new ServiceException(ResultCode.ERROR_1000);
-		}
-		
 		Community community = Community.builder()
-				.communityId(communityId)
 				.categoryId(categoryId)
+				.communityId(communityId)
 				.build();
+		
+		Boolean isCommunity = communityMapper.isCommunity(community);
+		
+		if(!isCommunity) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
 		try {
 			communityMapper.deleteCommunity(community);
 		} catch (ServiceException e) {
@@ -123,15 +120,17 @@ public class CommunityService {
 	
 	public ResVO getCommunity(long categoryId){
 		
+		Community community = Community.builder()
+				.categoryId(categoryId)
+				.build();
+		
 		List<Map<String, Object>> communityList = new ArrayList<Map<String,Object>>();
 		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
+		
 		if(!isCategoryId) {
 			throw new ServiceException(ResultCode.ERROR_1000);
 		}
 		
-		Community community = Community.builder()
-				.categoryId(categoryId)
-				.build();
 		try {
 			communityList= communityMapper.selectCommunity(community);
 		} catch (ServiceException e) {
@@ -149,21 +148,18 @@ public class CommunityService {
 	
 	public ResVO getCommunityDetail(long communityId,long categoryId){
 		
-		Map<String, Object> communityMap = new HashMap<String, Object>();
-		Boolean isCommunityId = communityMapper.isCommunityId(communityId);
-		Boolean isCategoryId = categoryMapper.isCategoryId(categoryId);
-		
-		if(!isCommunityId) {
-			throw new ServiceException(ResultCode.ERROR_1002);
-		}
-		if(!isCategoryId) {
-			throw new ServiceException(ResultCode.ERROR_1000);
-		}
-		
 		Community community = Community.builder()
 				.communityId(communityId)
 				.categoryId(categoryId)
-				.build();	
+				.build();
+		
+		Map<String, Object> communityMap = new HashMap<String, Object>();
+		Boolean isCommunity = communityMapper.isCommunity(community);
+		
+		if(!isCommunity) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
 		try {
 			communityMap = communityMapper.selectCommunityDetail(community);
 		} catch (ServiceException e) {

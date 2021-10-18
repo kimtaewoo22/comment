@@ -1,15 +1,21 @@
 package com.example.lol.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.lol.config.exception.ServiceException;
 import com.example.lol.mapper.CommentMapper;
 import com.example.lol.mapper.CommentReplyMapper;
+import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.Comment;
 import com.example.lol.model.Report;
+import com.example.lol.model.common.ResVO;
+import com.example.lol.model.common.ResultCode;
 
 @Service
 public class CommentReplyService {
@@ -20,62 +26,156 @@ public class CommentReplyService {
 	@Autowired
 	CommentMapper commentMapper;
 	
-	public Comment createCommentReply(long contentsId,long commentId, Comment comment) {
+	@Autowired
+	UserMapper userMapper;
+	
+	public ResVO createCommentReply(long contentsId,long commentId, Comment comment) {
 
 		comment.setContentsId(contentsId);
 		comment.setCommentId(commentId);
-		commentReplyMapper.insertCommentReply(comment);
 		
-		return comment;
+		Boolean isUser = userMapper.isUser(Long.valueOf(comment.getUserId()));
+		Boolean isComment = commentMapper.isComment(comment);
+		
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
+		}
+		
+		try {
+			commentReplyMapper.insertCommentReply(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment modifyCommentReply(long contentsId,long commentId, Comment comment) {
+	public ResVO modifyCommentReply(long contentsId,long commentId, Comment comment) {
 		
 		comment.setContentsId(contentsId);
 		comment.setCommentId(commentId);
-		commentReplyMapper.updateCommentReply(comment);
 		
-		return comment;
+		Boolean isComment = commentMapper.isComment(comment);
+		
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
+		try {
+			commentReplyMapper.updateCommentReply(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment deleteCommentReply(long contentsId,long commentId) {
+	public ResVO deleteCommentReply(long contentsId,long commentId) {
 		
 		Comment comment = Comment.builder()
 								.contentsId(contentsId)
 								.commentId(commentId)
 								.build();
 		
-		commentReplyMapper.deleteCommentReply(comment);
+		Boolean isComment = commentMapper.isComment(comment);
 		
-		return comment;
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
+		try {
+			commentReplyMapper.deleteCommentReply(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public List<Map<String, Object>> getCommentReplyList(long contentsId,long commentId){
+	public ResVO getCommentReplyList(long contentsId,long commentId){
 		
 		Comment comment = Comment.builder()
 						.contentsId(contentsId)
 						.commentId(commentId)
 						.build();
 		
-		return commentReplyMapper.selectCommentReply(comment);
+		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
+		Boolean isComment = commentMapper.isComment(comment);
+		
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		try {
+			commentList = commentReplyMapper.selectCommentReply(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(commentList)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Map<String, Object> getCommentReplyDetail(long contentsId,long commentId){
+	public ResVO getCommentReplyDetail(long contentsId,long commentId){
 		
 		Comment comment = Comment.builder()
 						.contentsId(contentsId)
 						.commentId(commentId)
 						.build();
 		
-		return commentReplyMapper.selectCommentReplyDetail(comment);
+		Map<String, Object> commentMap = new HashMap<String, Object>();
+		Boolean isComment = commentMapper.isComment(comment);
+		
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		
+		try {
+			commentMap = commentReplyMapper.selectCommentReplyDetail(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(commentMap)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
-	public Comment createReport(long contentsId,long commentId, Map<String, Object> paramMap) {
+	public ResVO createReport(long contentsId,long commentId, Map<String, Object> paramMap) {
 
 		Comment comment = Comment.builder()
-								.contentsId(contentsId)
-								.commentId(commentId)
-								.build();
+						.contentsId(contentsId)
+						.commentId(commentId)
+						.build();
 		
 		Report report = Report.builder()
 					.commentId(commentId)
@@ -83,20 +183,52 @@ public class CommentReplyService {
 					.reason((String)paramMap.get("reason"))
 					.build();
 		
-		Boolean isReport = commentMapper.isReport(report);
+		Boolean isComment = commentMapper.isComment(comment);
+		Boolean isUser = userMapper.isUser(Long.valueOf(paramMap.get("userId").toString()));
 		
-		if(!isReport) {
-			comment.setReportCnt(reportCnt(comment)+1);
-			
-			commentReplyMapper.updateReport(comment);
-			commentMapper.insertReport(report);
+		if(!isComment) {
+			throw new ServiceException(ResultCode.ERROR_2000);
+		}
+		if(!isUser) {
+			throw new ServiceException(ResultCode.ERROR_3000);
 		}
 		
-		return comment;
+		try {
+			Boolean isReport = commentMapper.isReport(report);
+			
+			if(!isReport) {
+				comment.setReportCnt(reportCnt(comment)+1);
+				
+				commentReplyMapper.updateReport(comment);
+				commentMapper.insertReport(report);
+			}else {
+				throw new ServiceException(ResultCode.ERROR_9999);
+			}
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_4000);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return ResVO.builder()
+				.data(comment)
+				.resultCode(ResultCode.SUCCESS.getResultCode())
+				.resultMsg(ResultCode.SUCCESS.getResultMsg())
+				.build();
 	}
 	
 	public Long reportCnt(Comment comment) {
-		Map<String, Object> resultMap = commentReplyMapper.selectCommentReplyDetail(comment);
-		return (Long) resultMap.get("reportCnt");
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try {
+			resultMap = commentReplyMapper.selectCommentReplyDetail(comment);
+		} catch (ServiceException e) {
+			throw new ServiceException(ResultCode.ERROR_9999);
+		}catch (Exception e) {
+			System.out.println("error : "+e.getMessage());
+		}
+		
+		return (long) resultMap.get("reportCnt");
 	}
 }

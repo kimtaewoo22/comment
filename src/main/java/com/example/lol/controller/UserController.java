@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.User;
 import com.example.lol.model.common.CommentConst;
+import com.example.lol.model.common.ResVO;
 import com.example.lol.service.UserService;
 
 @RestController
@@ -25,28 +26,28 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("")
-	public User createUserController(@RequestBody User user) {
+	public ResVO createUserController(@RequestBody User user) {
 		return userService.createUser(user);
 	}
 	
 	@PutMapping("/{userId}")
-	public User modifyUserController(@PathVariable("userId") long userId
+	public ResVO modifyUserController(@PathVariable("userId") long userId
 								, @RequestBody User user) {
 		return userService.modifyUser(userId, user);
 	}
 	
 	@DeleteMapping("/{userId}")
-	public User deleteUserController(@PathVariable("userId") long userId) {
+	public ResVO deleteUserController(@PathVariable("userId") long userId) {
 		return userService.deleteUser(userId);
 	}
 	
 	@GetMapping("")
-	public List<Map<String, Object>> getUserController(){
+	public ResVO getUserController(){
 		return userService.getUserList();
 	}
 	
 	@GetMapping("/{userId}")
-	public Map<String, Object> getUserDetailController(@PathVariable("userId") long userId) {
+	public ResVO getUserDetailController(@PathVariable("userId") long userId) {
 		return userService.getUserDetail(userId);
 	}
 }

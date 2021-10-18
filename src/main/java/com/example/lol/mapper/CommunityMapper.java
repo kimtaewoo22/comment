@@ -20,5 +20,5 @@ public interface CommunityMapper {
 	
 	public Map<String,Object> selectCommunityDetail(Community community);
 	
-	public Boolean isCommunityId(long communityId);
+	public Boolean isCommunity(Community community);
 }
