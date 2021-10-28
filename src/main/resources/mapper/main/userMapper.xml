@@ -29,14 +29,17 @@
 		WHERE userId = #{userId}
 	</update>
 	
-	<select id="selectUser" resultType="java.util.Map">
+	<select id="selectUser" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="common.commonPagingTop"/>
 		SELECT userId
-			,userNm
-			,adminYn
-			,isDelete
-			,createDate
-			,modifyDate
-		FROM cmt_user
+				,userNm
+				,adminYn
+				,isDelete
+				,createDate
+				,modifyDate
+			FROM cmt_user
+			ORDER BY userId
+		<include refid="common.commonPagingBottom"/>
 	</select>
 	
 	<select id="selectUserDetail" parameterType="com.example.lol.model.User" resultType="java.util.Map">

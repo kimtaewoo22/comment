@@ -35,7 +35,8 @@
 		WHERE commentId = #{commentId}
 	</delete>
 	
-	<select id="selectCommentReply" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+	<select id="selectCommentReply" parameterType="java.util.Map" resultType="java.util.Map">
+	<include refid="common.commonPagingTop"/>
 		SELECT commentId
 			,contents
 			,userId
@@ -46,6 +47,8 @@
 			,parentsId
 		FROM cmt_comment
 		WHERE depth = 1
+		AND parentsId = #{parentsId}
+	<include refid="common.commonPagingBottom"/>
 	</select>
 	
 	<select id="selectCommentReplyDetail" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">

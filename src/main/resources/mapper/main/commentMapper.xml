@@ -34,7 +34,8 @@
 		WHERE commentId = #{commentId}
 	</delete>
 	
-	<select id="selectComment" parameterType="com.example.lol.model.Comment" resultType="java.util.Map">
+	<select id="selectComment" parameterType="java.util.Map" resultType="java.util.Map">
+		<include refid="common.commonPagingTop"/>
 		SELECT A.commentId
 			,A.contentsId
 			,A.userId
@@ -47,6 +48,8 @@
 		FROM cmt_comment A
 		WHERE A.contentsId = #{contentsId}
 		AND A.isDelete = 0
+		AND A.depth = 0
+		<include refid="common.commonPagingBottom"/>
 	</select>
 	
 	<insert id="insertLike" parameterType="com.example.lol.model.Like" useGeneratedKeys="true" keyProperty="likeId">

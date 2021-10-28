@@ -66,7 +66,7 @@
 		<if test="contentsId != null and contentsId != ''">
 			and contentsId = #{contentsId}
 		</if>
-		<if test="">
+		<if test="communityId != null and communityId != ''">
 			and communityId = #{communityId}
 		</if> 
 	</select>
