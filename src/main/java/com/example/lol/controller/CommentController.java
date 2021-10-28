@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.Comment;
@@ -47,9 +48,11 @@ public class CommentController {
 	}
 	
 	@GetMapping("/{contentsId}")
-	public ResVO getCommentController(@PathVariable("contentsId") long contentsId){
+	public ResVO getCommentController(@PathVariable("contentsId") long contentsId
+									, @RequestParam(value = "currentPage" , required = false, defaultValue = "1") int currentPage
+									, @RequestParam(value = "pageSize" , required = false, defaultValue = "3") int pageSize){
 		
-		return commentService.getCommentList(contentsId);
+		return commentService.getCommentList(contentsId,currentPage,pageSize);
 	}
 	
 	@PostMapping("/{contentsId}/{commentId}/like")

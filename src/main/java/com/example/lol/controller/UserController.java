@@ -1,8 +1,7 @@
 package com.example.lol.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.lol.model.User;
@@ -21,6 +21,8 @@ import com.example.lol.service.UserService;
 @RestController
 @RequestMapping(CommentConst.API_ROOT+CommentConst.API_VERSION_V1+"/user")
 public class UserController {
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	UserService userService;
@@ -42,8 +44,10 @@ public class UserController {
 	}
 	
 	@GetMapping("")
-	public ResVO getUserController(){
-		return userService.getUserList();
+	public ResVO getUserController(@RequestParam(value="currentPage", required = false, defaultValue = "1") int currentPage
+								,@RequestParam(value="pageSize", required = false, defaultValue = "3") int pageSize){
+		logger.debug("getUserController start...................");
+		return userService.getUserList(currentPage, pageSize);
 	}
 	
 	@GetMapping("/{userId}")

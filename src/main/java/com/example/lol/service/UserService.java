@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.example.lol.config.exception.ServiceException;
 import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.User;
+import com.example.lol.model.common.Pagination;
 import com.example.lol.model.common.ResVO;
 import com.example.lol.model.common.ResultCode;
+import com.example.lol.service.common.CommonService;
 
 @Service
 public class UserService {
@@ -93,19 +95,24 @@ public class UserService {
 				.build();
 	}
 	
-	public ResVO getUserList(){
+	public ResVO getUserList(int currentPage, int pageSize){
 		
 		List<Map<String, Object>> userList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> pageMap = CommonService.pageService(currentPage, pageSize);
 		
 		try {
-			userList = userMapper.selectUser();
+			userList = userMapper.selectUser(pageMap);
 		}catch (ServiceException e) {
 			throw new ServiceException(ResultCode.ERROR_9999);
 		}catch (Exception e) {
 			System.out.println("error :"+ e.getMessage());
 		}
+		
+		Pagination pagination = CommonService.pageTotalCountService(userList, pageMap);
+		
 		return ResVO.builder()
 				.data(userList)
+				.pagingInfo(pagination)
 				.resultCode(ResultCode.SUCCESS.getResultCode())
 				.resultMsg(ResultCode.SUCCESS.getResultMsg())
 				.build();

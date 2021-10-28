@@ -6,13 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class ResVO {
+public class Pagination {
+		
+	private int currentPage;
 	
-	private Object data;
-	private Object pagingInfo;
-	private String resultCode;
-	private String resultMsg;
+	private int pageSize;
+	
+	private int totalPage;
+	
+	private int totalCount;
+	
+	private int startIndex;
 }

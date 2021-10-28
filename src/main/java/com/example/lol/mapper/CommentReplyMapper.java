@@ -12,7 +12,7 @@ public interface CommentReplyMapper {
 	public int insertCommentReply(Comment comment);
 	public int updateCommentReply(Comment comment);
 	public int deleteCommentReply(Comment comment);
-	public List<Map<String, Object>> selectCommentReply(Comment comment);
+	public List<Map<String, Object>> selectCommentReply(Map<String, Object> pageMap);
 	public Map<String, Object> selectCommentReplyDetail(Comment comment);
 	public int updateReport(Comment comment);
 }

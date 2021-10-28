@@ -18,7 +18,7 @@ public interface CommentMapper {
 	
 	public int deleteComment(Comment comment);
 	
-	public List<Map<String, Object>> selectComment(Comment comment);
+	public List<Map<String, Object>> selectComment(Map<String, Object> paramMap);
 	
 	public int insertLike(Like like);
 	

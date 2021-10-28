@@ -14,8 +14,10 @@ import com.example.lol.mapper.CommentReplyMapper;
 import com.example.lol.mapper.UserMapper;
 import com.example.lol.model.Comment;
 import com.example.lol.model.Report;
+import com.example.lol.model.common.Pagination;
 import com.example.lol.model.common.ResVO;
 import com.example.lol.model.common.ResultCode;
+import com.example.lol.service.common.CommonService;
 
 @Service
 public class CommentReplyService {
@@ -113,7 +115,7 @@ public class CommentReplyService {
 				.build();
 	}
 	
-	public ResVO getCommentReplyList(long contentsId,long commentId){
+	public ResVO getCommentReplyList(long contentsId,long commentId, int currentPage, int pageSize){
 		
 		Comment comment = Comment.builder()
 						.contentsId(contentsId)
@@ -126,16 +128,23 @@ public class CommentReplyService {
 		if(!isComment) {
 			throw new ServiceException(ResultCode.ERROR_2000);
 		}
+		
+		Map<String, Object> paramMap = CommonService.pageService(currentPage, pageSize);
+		paramMap.put("parentsId", commentId);
+		
 		try {
-			commentList = commentReplyMapper.selectCommentReply(comment);
+			commentList = commentReplyMapper.selectCommentReply(paramMap);
 		} catch (ServiceException e) {
 			throw new ServiceException(ResultCode.ERROR_9999);
 		}catch (Exception e) {
 			System.out.println("error : "+e.getMessage());
 		}
 		
+		Pagination pagination = CommonService.pageTotalCountService(commentList, paramMap);
+		
 		return ResVO.builder()
 				.data(commentList)
+				.pagingInfo(pagination)
 				.resultCode(ResultCode.SUCCESS.getResultCode())
 				.resultMsg(ResultCode.SUCCESS.getResultMsg())
 				.build();

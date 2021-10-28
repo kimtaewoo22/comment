@@ -16,8 +16,10 @@ import com.example.lol.model.Comment;
 import com.example.lol.model.Contents;
 import com.example.lol.model.Like;
 import com.example.lol.model.Report;
+import com.example.lol.model.common.Pagination;
 import com.example.lol.model.common.ResVO;
 import com.example.lol.model.common.ResultCode;
+import com.example.lol.service.common.CommonService;
 
 @Service
 public class CommentService {
@@ -113,33 +115,34 @@ public class CommentService {
 				.build();
 	}
 	
-	public ResVO getCommentList(long contentsId){
+	public ResVO getCommentList(long contentsId, int currentPage, int pageSize){
 		
 		Contents contents = Contents.builder()
 								.contentsId(contentsId)
 								.build();
 		
-		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
 		Boolean isContents = contentsMapper.isContents(contents);
 		
 		if(!isContents) {
 			throw new ServiceException(ResultCode.ERROR_1003);
 		}
 		
-		Comment comment = Comment.builder()
-				.contentsId(contentsId)
-				.build();
+		List<Map<String, Object>> commentList = new ArrayList<Map<String,Object>>();
+		Map<String, Object> paramMap = CommonService.pageService(currentPage, pageSize);
+		paramMap.put("contentsId", contentsId);
 		
 		try {
-			commentList = commentMapper.selectComment(comment);
+			commentList = commentMapper.selectComment(paramMap);
 		}catch (ServiceException e) {
 			throw new ServiceException(ResultCode.ERROR_9999);
 		}catch (Exception e) {
 			System.out.println("error : "+e.getMessage());
 		}
+		Pagination pagination = CommonService.pageTotalCountService(commentList, paramMap);
 		
 		return ResVO.builder()
 				.data(commentList)
+				.pagingInfo(pagination)
 				.resultCode(ResultCode.SUCCESS.getResultCode())
 				.resultMsg(ResultCode.SUCCESS.getResultMsg())
 				.build();
