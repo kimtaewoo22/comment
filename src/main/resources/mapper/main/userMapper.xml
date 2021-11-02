@@ -51,6 +51,9 @@
 			,modifyDate
 		FROM cmt_user
 		WHERE userId = #{userId}
+		<if test="userNm != null and userNm != ''">
+			AND userNm = #{userNm}
+		</if>
 	</select>
 	
 	<select id="isUser" parameterType="Long" resultType="Boolean">
