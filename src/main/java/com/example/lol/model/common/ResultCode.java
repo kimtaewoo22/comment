@@ -12,6 +12,8 @@ public enum ResultCode {
 	ERROR_3000("ERROR_3000", "Parameter값을 확인하세요."),
 	ERROR_4000("ERROR_4000", "이미 신고처리가 되었습니다."),
 	
+	ERROR_5000("ERROR_5000", "토큰정보가 없습니다."),
+	ERROR_5001("ERROR_5001", "토큰이 만료되었습니다."),
 	ERROR_9000("ERROR_9000", "아이디가 없습니다."),
 	ERROR_9001("ERROR_9001", "패스워드가 맞지 않습니다."),
 	
