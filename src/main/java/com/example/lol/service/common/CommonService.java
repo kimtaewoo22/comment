@@ -1,5 +1,9 @@
 package com.example.lol.service.common;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.lol.model.common.Pagination;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CommonService {
 	
 	public static Map<String, Object> pageService(int currentPage, int pageSize){
@@ -47,5 +54,65 @@ public class CommonService {
 		}
 		
 		return pagination;
+	}
+	
+	/**
+	 * 현재 날짜 비교
+	 * @param date
+	 * @return boolean(현재 날짜 보다 작으면 true 높으면 false)
+	 */
+	public boolean currentTimeCompare(Date dt){
+
+		Boolean result = false;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date currentTime = new Date();
+		
+		String currentDate = simpleDateFormat.format(currentTime);
+		String date = simpleDateFormat.format(dt);
+		
+		int compare = date.compareTo(currentDate);
+		
+		if(compare >= 0) {
+			result = true;
+		}else {
+			result = false;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * String을 Date형으로 형변환 및 포맷 (yyyy-MM-dd HH:mm:ss)
+	 * @param data
+	 * @return
+	 */
+	public Date StringToDateCasting(String st) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date resultData = null;
+		
+		try {
+			resultData = simpleDateFormat.parse(st);
+			resultData = calDate(resultData);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return resultData;
+	}
+	
+	/**
+	 * 날짜 더하기 (+2일,+1시간)
+	 * @param dt
+	 * @return
+	 */
+	public Date calDate(Date dt) {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dt);
+//		cal.add(Calendar.DATE,2);
+		cal.add(Calendar.HOUR, 1);
+		dt = cal.getTime();
+		
+		return dt;
 	}
 }
