@@ -22,8 +22,6 @@ import com.example.lol.service.UserService;
 @RequestMapping(CommentConst.API_ROOT+CommentConst.API_VERSION_V1+"/user")
 public class UserController {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
 	UserService userService;
 	
@@ -46,7 +44,6 @@ public class UserController {
 	@GetMapping("")
 	public ResVO getUserController(@RequestParam(value="currentPage", required = false, defaultValue = "1") int currentPage
 								,@RequestParam(value="pageSize", required = false, defaultValue = "3") int pageSize){
-		logger.debug("getUserController start...................");
 		return userService.getUserList(currentPage, pageSize);
 	}
 	
