@@ -18,6 +18,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommonService {
 	
+	private static final int CURRENT_PAGE = 1;
+	
+	private static final int PAGE_SIZE = 5;
+	
+	public static Map<String, Object> pageSetting(Map<String, Object> paramMap){
+		
+		if(paramMap.get("currentPage") == null || "".equals(paramMap.get("currentPage"))){
+			paramMap.put("currentPage", CURRENT_PAGE);
+		}
+		
+		if(paramMap.get("pageSize") == null || "".equals(paramMap.get("pageSize"))){
+			paramMap.put("pageSize", PAGE_SIZE);
+		}
+		int currentPage = Integer.parseInt(paramMap.get("currentPage").toString());
+		int pageSize = Integer.parseInt(paramMap.get("pageSize").toString());
+		
+		paramMap.put("startIndex", (currentPage-1) * pageSize);
+		
+		return paramMap;
+	}
+	
 	public static Map<String, Object> pageService(int currentPage, int pageSize){
 		
 		Map<String, Object> pageMap = new HashMap<String, Object>();

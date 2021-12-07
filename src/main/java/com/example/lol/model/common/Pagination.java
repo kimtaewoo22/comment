@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Pagination {
-		
+	
 	private int currentPage;
 	
 	private int pageSize;
