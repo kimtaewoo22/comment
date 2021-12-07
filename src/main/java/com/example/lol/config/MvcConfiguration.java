@@ -20,7 +20,11 @@ public class MvcConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		logger.debug("addInterceptors.........start");
-		registry.addInterceptor(commentInterceptor).addPathPatterns("/**").excludePathPatterns("/**/login").excludePathPatterns("/**/token");
+		registry.addInterceptor(commentInterceptor)
+		.excludePathPatterns("/**/login")
+		.excludePathPatterns("/**/token")
+		.excludePathPatterns("/admin/**")
+		.excludePathPatterns("/css/**","/font/**","/plugin/**","/scripts/**");
 	}
 
 }
