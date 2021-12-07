@@ -43,13 +43,12 @@ public class UserService {
 	
 	public ResVO modifyUser(long userId,User user) {
 		
-		Boolean isUser = userMapper.isUser(userId);
-		
-		if(!isUser) {
-			throw new ServiceException(ResultCode.ERROR_1001);
-		}
-		
 		try {
+			Boolean isUser = userMapper.isUser(userId);
+			
+			if(!isUser) {
+				throw new ServiceException(ResultCode.ERROR_1001);
+			}
 			
 			user.setUserId(userId);
 			userMapper.updateUser(user);
