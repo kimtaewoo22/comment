@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.lol.mapper.admin.AdminMapper">
+	<select id="selectUser" resultType="Map">
+		<include refid="common.commonPagingTop"/>
+		SELECT userId
+				,userNm
+				,adminYn
+				,isDelete
+				,DATE_FORMAT(createDate,'%Y-%m-%d %T') AS createDate
+				,DATE_FORMAT(modifyDate,'%Y-%m-%d %T') AS modifyDate
+		FROM cmt_user
+		WHERE isDelete = '0'		
+		ORDER BY userId
+		<include refid="common.commonPagingBottom"/>
+	</select>
+	
+	<select id="selectUserDetail" parameterType="long" resultType="Map">
+		SELECT userId
+				,userNm
+				,adminYn
+				,isDelete
+				,DATE_FORMAT(createDate,'%Y-%m-%d %T') AS createDate
+				,DATE_FORMAT(modifyDate,'%Y-%m-%d %T') AS modifyDate
+		FROM cmt_user
+		WHERE userId = #{userId}
+	</select>
+</mapper>
